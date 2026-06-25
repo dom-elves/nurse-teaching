@@ -15,6 +15,9 @@
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="home" :href="route('game')" :current="request()->routeIs('game')" wire:navigate>
+                        {{ __('Game') }}
+                    </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 

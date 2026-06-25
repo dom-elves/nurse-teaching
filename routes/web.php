@@ -8,4 +8,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
 });
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::view('game', 'game')->name('game');
+});
+
 require __DIR__.'/settings.php';
