@@ -3,17 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use App\Models\Option;
 use App\Models\Slide;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
  * @property int $slide_id
- * @property int $question_id
- * @property string $label
- * @property bool $is_correct
- * @property json $zone
+ * @property string $text
  */
+#[Fillable(['slide_id', 'text'])]
 class Question extends Model
 {
     /**
@@ -27,8 +28,8 @@ class Question extends Model
     /**
      * Get the slide for a question
      */
-    public function slide(): BelongsToMany
+    public function slide(): BelongsTo
     {
-        return $this->hasMany(Slide::class);
+        return $this->BelongsTo(Slide::class);
     }
 }

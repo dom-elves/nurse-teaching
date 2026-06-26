@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('question_id');
             $table->foreignId('slide_id');
-            $table->string('label');
-            $table->boolean('is_correct');
-            $table->json('zone');
+            $table->string('label')->nullable();
+            $table->boolean('is_correct')->nullable();
+            $table->json('zone')->nullable();
             $table->timestamps();
         });
     }

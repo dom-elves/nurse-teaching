@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use App\Models\Slide;
 use App\Models\Question;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,10 +13,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property int $id
  * @property int $slide_id
  * @property int $question_id
- * @property string $title
- * @property string $imagePath
+ * @property string $label
+ * @property bool $is_correct
+ * @property json $zone
  */
-#[Fillable(['slide_id', 'question_id', 'label', 'is_correct'])]
+#[Fillable(['slide_id', 'question_id', 'label', 'is_correct', 'zone'])]
 class Option extends Model
 {
     /**
