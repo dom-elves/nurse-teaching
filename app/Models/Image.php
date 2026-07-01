@@ -16,12 +16,12 @@ use App\Models\Option;
  * @property string $imagePath
  */
 #[Fillable(['title', 'image_path'])]
-class Slide extends Model
+class Image extends Model
 {
     use HasFactory;
 
     /**
-     * Get the slide's available questions.
+     * Get the image's available questions.
      */
     public function questions(): HasMany
     {
@@ -29,7 +29,7 @@ class Slide extends Model
     }
 
     /**
-     * Get the slide's available options.
+     * Get the image's available options.
      */
     public function options(): HasManyThrough
     {

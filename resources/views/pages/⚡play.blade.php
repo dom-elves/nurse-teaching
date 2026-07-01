@@ -1,10 +1,17 @@
 <?php
 
 use Livewire\Component;
+use Illuminate\Database\Eloquent\Collection;
+use App\Models\Image;
 
 new class extends Component
 {
-    //
+    public Collection $images;
+
+    public function mount()
+    {
+        $this->images = Image::all();
+    }
 };
 ?>
 {{--
@@ -14,4 +21,5 @@ new class extends Component
 --}}
 <div>
     it's this one
+    {{ $this->images[0]->questions[0]->options }}
 </div>

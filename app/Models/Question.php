@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use App\Models\Option;
-use App\Models\Slide;
+use App\Models\image;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
- * @property int $slide_id
+ * @property int $image_id
  * @property string $text
  */
-#[Fillable(['slide_id', 'text'])]
+#[Fillable(['image_id', 'text'])]
 class Question extends Model
 {
     /**
@@ -26,10 +26,10 @@ class Question extends Model
     }
 
     /**
-     * Get the slide for a question
+     * Get the image for a question
      */
-    public function slide(): BelongsTo
+    public function image(): BelongsTo
     {
-        return $this->BelongsTo(Slide::class);
+        return $this->BelongsTo(Image::class);
     }
 }

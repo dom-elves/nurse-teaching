@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('options', function (Blueprint $table) {
             $table->id();
             $table->foreignId('question_id');
-            $table->foreignId('slide_id');
+            $table->foreignId('image_id');
             $table->string('label')->nullable();
             $table->boolean('is_correct')->nullable();
             $table->json('zone')->nullable();

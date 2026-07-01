@@ -1,14 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Models\Slide;
+use App\Models\Image;
 use App\Models\Question;
 use App\Models\Option;
 
 Route::middleware(['auth', 'verified'])->group(function () {
-        $q = Question::first();
+        // $image = Image::first();
 
-        dd($q->slide);
+        // dd($image->question);
         Route::livewire('play', 'pages::play')->name('play');
 });
 
