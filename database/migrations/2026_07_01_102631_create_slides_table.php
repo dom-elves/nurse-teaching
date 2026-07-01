@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('options', function (Blueprint $table) {
+        Schema::create('slides', function (Blueprint $table) {
             $table->id();
-            $table->string('label')->nullable();
-            $table->json('zone')->nullable();
+            $table->foreignId('image_id')->constrained();
+            $table->foreignId('question_id')->constrained();
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('options');
+        Schema::dropIfExists('slides');
     }
 };
