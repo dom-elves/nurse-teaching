@@ -27,4 +27,5 @@ new class extends Component
     @foreach ($this->slides[0]->slideOptions as $slideOption)
         <p>{{ $slideOption->option->label }} - {{ $slideOption->is_correct ? 'Correct' : 'Incorrect' }}</p>
     @endforeach
+    <livewire:question.create />
 </div>

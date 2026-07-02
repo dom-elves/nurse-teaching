@@ -3,14 +3,20 @@
 use Livewire\Component;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Image;
+use App\Models\Question;
+use App\Models\Option;
 
 new class extends Component
 {
+    public Collection $questions;
     public Collection $images;
+    public Collection $options;
 
     public function mount(): void
     {
+        $this->questions = Question::all();
         $this->images = Image::all();
+        $this->options = Option::all();
     }
 };
 ?>
@@ -29,4 +35,5 @@ new class extends Component
             style="max-height: 200px;border:1px solid black"
         >
     @endforeach
+    {{ $this->options->last() }}
 </div>
