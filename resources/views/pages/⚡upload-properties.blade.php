@@ -27,7 +27,7 @@ new class extends Component
     /**
      * Create a new question.
      */
-    public function createQuestion(): void
+    public function createQuestion()
     {
         $this->validate([
             'question' => ['required', 'string', 'max:255'],
@@ -40,7 +40,7 @@ new class extends Component
         Flux::toast(variant: 'success', text: __('Question created successfully.'));
     
         $this->question = '';
-        $this->questions = Question::all();
+        return $this->redirect('/upload-properties');
     }
 
     // different logic probably for image
@@ -48,7 +48,7 @@ new class extends Component
     /**
      * Create a new Option.
      */
-    public function createOption(): void
+    public function createOption()
     {
         $this->validate([
             'option' => ['required', 'string', 'max:255'],
@@ -61,7 +61,7 @@ new class extends Component
         Flux::toast(variant: 'success', text: __('Option created successfully.'));
     
         $this->option = '';
-        $this->options = Option::all();
+        return $this->redirect('/upload-properties');
     }
 };
 ?>
