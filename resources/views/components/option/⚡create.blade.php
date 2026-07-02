@@ -12,7 +12,7 @@ new class extends Component
     /**
      * Create a new Option.
      */
-    public function createOption()
+    public function create()
     {
         Option::create([
             'label' => $this->option,
@@ -26,7 +26,7 @@ new class extends Component
 ?>
 
 <div>
-    <form method="POST" wire:submit="createOption" class="flex flex-col space-y-6 mb-12">
+    <form method="POST" wire:submit="create" class="flex flex-col space-y-6 mb-12">
         <flux:field>
             <flux:label>Option</flux:label>
             <flux:description>Add an option to be used in slide creation.</flux:description>
