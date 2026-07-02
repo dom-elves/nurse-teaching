@@ -2,11 +2,16 @@
 
 use Livewire\Component;
 use Illuminate\Database\Eloquent\Collection;
-use App\Models\Slide;
+use App\Models\Image;
 
 new class extends Component
 {
+    public Collection $images;
 
+    public function mount(): void
+    {
+        $this->images = Image::all();
+    }
 };
 ?>
 {{--
@@ -16,4 +21,12 @@ new class extends Component
 --}}
 <div>
     <h1 class="font-medium">Create a slide</h1> 
+    @foreach ($this->images as $image)
+        <p>{{ $image->title }}</p>
+        <img
+            src="{{ route('media', $image->path) }}" 
+            alt="{{ $image->title }}"
+            style="max-height: 200px;border:1px solid black"
+        >
+    @endforeach
 </div>

@@ -31,8 +31,8 @@ return new class extends Migration
         ]);
 
         $image = Image::create([
-            'title' => 'this is a placeholder',
-            'path' => 'it is not really here',
+            'title' => 'Human Body',
+            'path' => 'images/human-body.png',
         ]);
 
         $question = Question::create([
