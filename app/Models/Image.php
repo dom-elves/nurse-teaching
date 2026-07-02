@@ -6,33 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use App\Models\Quetsion;
-use App\Models\Option;
+use App\Models\Slide;
 
 /**
  * @property int $id
  * @property string $title
- * @property string $imagePath
+ * @property string $path
  */
-#[Fillable(['title', 'image_path'])]
+#[Fillable(['title', 'path'])]
 class Image extends Model
 {
     use HasFactory;
 
     /**
-     * Get the image's available questions.
+     * Get the image's available slide.
      */
-    public function questions(): HasMany
+    public function slide(): HasMany
     {
-        return $this->hasMany(Question::class);
-    }
-
-    /**
-     * Get the image's available options.
-     */
-    public function options(): HasManyThrough
-    {
-        return $this->hasMany(Option::class, Question::class);
+        return $this->hasMany(Slide::class);
     }
 }

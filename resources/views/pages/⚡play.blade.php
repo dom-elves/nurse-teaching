@@ -2,15 +2,15 @@
 
 use Livewire\Component;
 use Illuminate\Database\Eloquent\Collection;
-use App\Models\Image;
+use App\Models\Slide;
 
 new class extends Component
 {
-    public Collection $images;
+    public Collection $slides;
 
     public function mount()
     {
-        $this->images = Image::all();
+        $this->slides = Slide::all();
     }
 };
 ?>
@@ -21,5 +21,11 @@ new class extends Component
 --}}
 <div>
     it's this one
-    {{ $this->images[0]->questions[0]->options }}
+    <p>{{ $this->slides[0] }}</p>
+    <p>{{ $this->slides[0]->image->title }}</p>
+    <p>{{ $this->slides[0]->question->text }}</p>
+    @foreach ($this->slides[0]->slideOptions as $slideOption)
+        <p>{{ $slideOption->option->label }} - {{ $slideOption->is_correct ? 'Correct' : 'Incorrect' }}</p>
+    @endforeach
+    gdfdgfdg
 </div>

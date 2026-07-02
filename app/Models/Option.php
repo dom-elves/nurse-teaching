@@ -4,35 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
-use App\Models\Image;
-use App\Models\Question;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\SlideOption;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
- * @property int $image_id
- * @property int $question_id
  * @property string $label
- * @property bool $is_correct
  * @property json $zone
  */
-#[Fillable(['image_id', 'question_id', 'label', 'is_correct', 'zone'])]
+#[Fillable(['label', 'zone'])]
 class Option extends Model
 {
+    use HasFactory;
+    
     /**
-     * Get the question for an option
+     * Get the SlideOptions for an option
      */
-    public function question(): BelongsTo
+    public function slideOptions(): HasMany
     {
-        return $this->belongsTo(Question::class);
-    }
-
-    /**
-     * Get the image for an option
-     */
-    public function image(): BelongsToMany
-    {
-        return $this->belongsTo(Image::class);
+        return $this->hasMany(SlideOption::class);
     }
 }

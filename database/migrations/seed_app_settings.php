@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Image;
 use App\Models\Question;
 use App\Models\Option;
+use App\Models\Slide;
+use App\Models\SlideOption;
 
 return new class extends Migration
 {
@@ -30,7 +32,7 @@ return new class extends Migration
 
         $image = Image::create([
             'title' => 'this is a placeholder',
-            'image_path' => 'it is not really here',
+            'path' => 'it is not really here',
         ]);
 
         $question = Question::create([
@@ -38,21 +40,30 @@ return new class extends Migration
             'text' => 'Click on the head.',
         ]);
 
-        Option::create([
+        $options = Option::factory()
+            ->count(4)
+            ->sequence(
+                ['label' => 'right answer'],
+                ['label' => 'wrong answer 1'],
+                ['label' => 'wrong answer 2'],
+                ['label' => 'wrong answer 3'],
+            )
+            ->create([
+                'zone' => null,
+            ]);
+        
+        $slide = Slide::create([
             'image_id' => $image->id,
             'question_id' => $question->id,
-            'label' => 'wrong answer',
-            'is_correct' => 0,
-            'zone' => null,
         ]);
 
-        Option::create([
-            'image_id' => $image->id,
-            'question_id' => $question->id,
-            'label' => 'right answer',
-            'is_correct' => 1,
-            'zone' => null,
-        ]);
+        foreach ($options as $option) {
+            SlideOption::create([
+                'slide_id' => $slide->id,
+                'option_id' => $option->id,
+                'is_correct' => $option->label === 'right answer',
+            ]);
+        }
     }
 
     /**
