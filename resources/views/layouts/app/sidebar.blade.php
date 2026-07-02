@@ -20,6 +20,14 @@
                         {{ __('Play') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
+                <flux:sidebar.group :heading="__('Admin')" class="grid">
+                    <flux:sidebar.item icon="home" :href="route('slide.create')" :current="request()->routeIs('slide')" wire:navigate>
+                        {{ __('Create Slide') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="home" :href="route('upload-properties')" :current="request()->routeIs('upload-properties')" wire:navigate>
+                        {{ __('Upload Properties') }}
+                    </flux:sidebar.item>
+                </flux:sidebar.group>
             </flux:sidebar.nav>
 
             <flux:spacer />
