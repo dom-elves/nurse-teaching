@@ -35,5 +35,4 @@ new class extends Component
             style="max-height: 200px;border:1px solid black"
         >
     @endforeach
-    {{ $this->options->last() }}
 </div>
