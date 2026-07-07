@@ -20,7 +20,7 @@ new class extends Component
     /**
      * Create (upload) a new image.
      */
-    public function createImage()
+    public function create()
     {
         $path = $this->image->store('images', 'public');
 
@@ -37,7 +37,7 @@ new class extends Component
 ?>
 
 <div>
-    <form method="POST" wire:submit="createImage" class="flex flex-col space-y-6 mb-12">
+    <form method="POST" wire:submit="create" class="flex flex-col space-y-6 mb-12">
         <flux:field>
             <flux:label>Image</flux:label>
             <flux:description>Upload an image to be used in slide creation.</flux:description>
