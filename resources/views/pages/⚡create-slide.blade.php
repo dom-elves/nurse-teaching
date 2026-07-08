@@ -13,11 +13,14 @@ new class extends Component
     public Collection $images;
     public Collection $options;
 
-    public array $slide = [
-        'question_id' => null,
-        'image_id' => null,
-        'option_ids' => [],
-    ];
+    // public array $slide = [
+    //     'question_id' => null,
+    //     'image_id' => null,
+    //     'option_ids' => [],
+    // ];
+
+    public ?int $questionId = null;
+    public ?Question $question = null;
 
     public function mount(): void
     {
@@ -25,6 +28,10 @@ new class extends Component
         $this->images = Image::all();
         $this->options = Option::all();
     }
+
+    // todo: figure out if it's best to make the preview purely reactive with alpine
+    // or have a 'preview' button to generate & use php code
+    // maybe jsut have completely separate component for creating the preview
 
     public function create()
     {
@@ -48,6 +55,11 @@ new class extends Component
             ]
         );
     }
+    // this works cause of livewire naming convention magic
+    public function updatedQuestionId($value)
+    {
+        $this->question = Question::find($value);
+    }
 };
 ?>
 {{--
@@ -63,7 +75,7 @@ new class extends Component
             {{-- question selection --}}
             <div>
                 <h2>Question</h2>
-                <flux:select wire:model.live="slide.question_id">
+                <flux:select wire:model.live="questionId">
                     <flux:select.option
                         value=""
                     >
@@ -83,7 +95,7 @@ new class extends Component
             </div>
             
             {{-- image selection, no free flux equivalent so had to make a basic one --}}
-            <div>
+            {{-- <div>
                 <h2>Image</h2>
                 <div class="flex flex-wrap gap-4" x-data="{ selected: null }">
                     @foreach ($this->images as $image)
@@ -109,11 +121,11 @@ new class extends Component
                 @error('slide.image_id')
                     <p class="text-sm text-red-500">{{ $message }}</p>
                 @enderror
-            </div>
+            </div> --}}
 
             {{-- option selection, again flux multiselect isn't free so i made one --}}
             {{-- todo: move this into a parent div and let alpine do all the preview stuff --}}
-            <div x-data="{
+            {{-- <div x-data="{
                 options: @js($this->options),
                 addOption(event) {
                     const value = event.target.value;
@@ -159,18 +171,18 @@ new class extends Component
             </div>
             @error('slide.option_ids')
                 <p class="text-sm text-red-500">{{ $message }}</p>
-            @enderror
+            @enderror --}}
             <flux:button variant="primary" type="submit">
                 {{ __('Save') }}
             </flux:button>
         </form>
         <div>
             <h2>Preview</h2>
-            <p>{{ $this->slide['question_id'] }}</p>
-            <p>{{ $this->slide['image_id'] }}</p>
+            <p>{{ $this->question?->text }}</p>
+            {{-- <p>{{ $this->slide['image_id'] }}</p>
             @foreach($this->slide['option_ids'] as $ids)
                 {{ $ids }}
-            @endforeach
+            @endforeach --}}
         </div>
     </div>
 </div>
