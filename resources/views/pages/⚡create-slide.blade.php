@@ -16,6 +16,7 @@ new class extends Component
     public array $slide = [
         'question_id' => null,
         'image_id' => null,
+        'option_ids' => [],
     ];
 
     public function mount(): void
@@ -27,6 +28,7 @@ new class extends Component
 
     public function create()
     {
+        dd($this->slide);
         $this->validate(
             [
                 'slide.question_id' => 'required|exists:questions,id',
@@ -50,7 +52,8 @@ new class extends Component
 --}}
 <div>
     <h1 class="font-medium">Create a slide</h1>
-    <form method="POST" wire:submit="create" class="flex flex-col space-y-6 my-12">
+    <form method="POST" wire:submit="create" class="flex flex-col space-y-6 my-12" style="width:50%">
+        
         {{-- question selection --}}
         <div>
             <h2>Question</h2>
@@ -72,6 +75,7 @@ new class extends Component
                 <p class="text-sm text-red-500">{{ $message }}</p>
             @enderror
         </div>
+        
         {{-- image selection, no free flux equivalent so had to make a basic one --}}
         <div>
             <h2>Image</h2>
@@ -85,7 +89,7 @@ new class extends Component
                             style="max-height:200px;border:1px solid black"
                             :class="{ 'opacity-25': selected === {{ $image->id }} }"
                             x-on:click="$wire.set('slide.image_id', {{ $image->id }}); selected = {{ $image->id }}"
-                            >
+                        >
                         <p
                             :class="{ 'visible': selected === {{ $image->id }} }" 
                             class="absolute text-center bottom-0 right-0 left-0 invisible 
@@ -104,7 +108,46 @@ new class extends Component
         </div>
 
         {{-- option selection --}}
-
+        <div x-data="{
+            options: @js($this->options),
+            addOption(event) {
+                const value = event.target.value;
+                if (value && !$wire.slide.option_ids.includes(value)) {
+                    this.$wire.slide.option_ids.push(value);
+                }
+                event.target.value = '';
+            },
+            removeOption(index) {
+                $wire.slide.option_ids = $wire.slide.option_ids.filter(item => item !== index);
+            },
+        }"
+        >
+            <h2>Options</h2>
+            <flux:select x-on:change="addOption($event)">
+                <flux:select.option
+                    value=""
+                    disabled
+                    selected
+                >
+                    {{ __('Select options (up to four)') }}
+                </flux:select.option>
+                    @foreach ($this->options as $option)
+                        <flux:select.option
+                            value="{{ $option->id }}"
+                        >
+                            {{ $option->label }}
+                        </flux:select.option>
+                    @endforeach
+            </flux:select>
+            <div>
+                <template x-for="item in $wire.slide.option_ids" :key="item">
+                    <div class="flex flex-row">
+                        <p x-text="item" class="my-3"></p>
+                        <span x-on:click="removeOption(item)">x</span>
+                    </div>
+                </template>
+            </div>  
+        </div>
 
         <flux:button variant="primary" type="submit">
             {{ __('Save') }}
