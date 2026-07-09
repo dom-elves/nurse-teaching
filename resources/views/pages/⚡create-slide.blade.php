@@ -20,10 +20,13 @@ new class extends Component
     // ];
 
     public ?int $questionId = null;
-    public ?Question $question = null;
+    public ?Question $selectedQuestion = null;
 
     public ?int  $imageId = null;
-    public ?Image $image = null;
+    public ?Image $selectedImage = null;
+
+    public array $optionIds = [];
+    public Collection $selectedOptions;
 
     public function mount(): void
     {
@@ -42,8 +45,8 @@ new class extends Component
             [
                 'slide.question_id' => 'required|exists:questions,id',
                 'slide.image_id' => 'required|exists:images,id',
-                'slide.option_ids' => 'required|array|min:2|max:4',
-                'slide.option_ids.*' => 'exists:options,id',
+                'optionIds' => 'required|array|min:2|max:4',
+                'optionIds.*' => 'exists:options,id',
             ],
             [
                 'slide.question_id.required' => 'Please select a question.',
@@ -52,21 +55,21 @@ new class extends Component
                 'slide.image_id.required' => 'Please select an image.',
                 'slide.image_id.exists' => 'The selected image is invalid.',
 
-                'slide.option_ids.required' => 'Please select two to four options.',
-                'slide.option_ids.min' => 'Please select at least two optionsm.',
-                'slide.option_ids.max' => 'Please select no more than four options.',
+                'optionIds.required' => 'Please select two to four options.',
+                'optionIds.min' => 'Please select at least two optionsm.',
+                'optionIds.max' => 'Please select no more than four options.',
             ]
         );
     }
     // this works cause of livewire naming convention magic
     public function updatedQuestionId($value)
     {
-        $this->question = Question::find($value);
+        $this->selectedQuestion = Question::find($value);
     }
 
     public function updatedImageId($value)
     {
-        $this->image = Image::find($value);
+        $this->selectedImage = Image::find($value);
     }
 };
 ?>
@@ -133,17 +136,17 @@ new class extends Component
 
             {{-- option selection, again flux multiselect isn't free so i made one --}}
             {{-- todo: move this into a parent div and let alpine do all the preview stuff --}}
-            {{-- <div x-data="{
+            <div x-data="{
                 options: @js($this->options),
                 addOption(event) {
                     const value = event.target.value;
-                    if (value && !$wire.slide.option_ids.includes(value)) {
-                        this.$wire.slide.option_ids.push(value);
+                    if (value && !$wire.optionIds.includes(value)) {
+                        this.$wire.optionIds.push(value);
                         $wire.$refresh();
                     }
                 },
                 removeOption(index) {
-                    $wire.slide.option_ids = $wire.slide.option_ids.filter(item => item !== index);
+                    $wire.optionIds = $wire.optionIds.filter(item => item !== index);
                     $wire.$refresh();
                 },
             }"
@@ -151,7 +154,7 @@ new class extends Component
                 <h2>Options</h2>
                 <flux:select 
                     x-on:change="addOption($event)"
-                    x-bind:disabled="$wire.slide.option_ids.length >= 4"
+                    x-bind:disabled="$wire.optionIds.length >= 4"
                 >
                     <flux:select.option
                         value=""
@@ -169,7 +172,7 @@ new class extends Component
                     @endforeach
                 </flux:select>
                 <div>
-                    <template x-for="item in $wire.slide.option_ids" :key="item">
+                    <template x-for="item in $wire.optionIds" :key="item">
                         <div class="flex flex-row">
                             <p x-text="item" class="my-3"></p>
                             <span x-on:click="removeOption(item)">x</span>
@@ -177,9 +180,9 @@ new class extends Component
                     </template>
                 </div>  
             </div>
-            @error('slide.option_ids')
+            @error('optionIds')
                 <p class="text-sm text-red-500">{{ $message }}</p>
-            @enderror --}}
+            @enderror
             <flux:button variant="primary" type="submit">
                 {{ __('Save') }}
             </flux:button>
@@ -187,18 +190,17 @@ new class extends Component
         {{-- slide preview --}}
         <div>
             <h2>Preview</h2>
-            <p>{{ $this->question?->text }}</p>
+            <p>{{ $this->selectedQuestion?->text }}</p>
             {{-- for some weird reason, nullsafe doesn't work here --}}
-            @if($this->image)
+            @if($this->selectedImage)
                 <img
-                    id="{{ $this->image->id }}"
-                    src="{{ route('media', $this->image->path) }}" 
-                    alt="{{ $this->image->title }}"
+                    id="{{ $this->selectedImage->id }}"
+                    src="{{ route('media', $this->selectedImage->path) }}" 
+                    alt="{{ $this->selectedImage->title }}"
                     style="max-height:200px;border:1px solid black"
                 >
             @endif
-            {{-- <p>{{ $this->slide['image_id'] }}</p>
-            @foreach($this->slide['option_ids'] as $ids)
+            {{-- @foreach($this->slide['option_ids'] as $ids)
                 {{ $ids }}
             @endforeach --}}
         </div>
