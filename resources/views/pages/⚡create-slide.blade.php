@@ -25,8 +25,8 @@ new class extends Component
     public ?int  $imageId = null;
     public ?Image $selectedImage = null;
 
-    public array $optionIds = [];
-    public Collection $selectedOptions;
+    public ?array $optionIds = [];
+    public ?Collection $selectedOptions = null;
 
     public function mount(): void
     {
@@ -35,10 +35,24 @@ new class extends Component
         $this->options = Option::all();
     }
 
-    // todo: figure out if it's best to make the preview purely reactive with alpine
-    // or have a 'preview' button to generate & use php code
-    // maybe jsut have completely separate component for creating the preview
+    // Livewire magic methods, changing a prop allows these methods to exist
+    // already all wired up
+    public function updatedQuestionId($value)
+    {
+        $this->selectedQuestion = Question::find($value);
+    }
 
+    public function updatedImageId($value)
+    {
+        $this->selectedImage = Image::find($value);
+    }
+
+    public function updatedOptionIds($value)
+    {
+        $this->selectedOptions = Option::whereIn('id', $value)->get();
+    }
+
+    // slide creation
     public function create()
     {
         $this->validate(
@@ -60,16 +74,6 @@ new class extends Component
                 'optionIds.max' => 'Please select no more than four options.',
             ]
         );
-    }
-    // this works cause of livewire naming convention magic
-    public function updatedQuestionId($value)
-    {
-        $this->selectedQuestion = Question::find($value);
-    }
-
-    public function updatedImageId($value)
-    {
-        $this->selectedImage = Image::find($value);
     }
 };
 ?>
@@ -200,9 +204,11 @@ new class extends Component
                     style="max-height:200px;border:1px solid black"
                 >
             @endif
-            {{-- @foreach($this->slide['option_ids'] as $ids)
-                {{ $ids }}
-            @endforeach --}}
+            @if($this->selectedOptions)
+                @foreach($this->selectedOptions as $selectedOption)
+                    {{ $selectedOption->label }}
+                @endforeach
+            @endif
         </div>
     </div>
 </div>
