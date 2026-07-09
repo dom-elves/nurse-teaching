@@ -191,24 +191,29 @@ new class extends Component
                 {{ __('Save') }}
             </flux:button>
         </form>
+
         {{-- slide preview --}}
-        <div>
+        <div class="w-1/2">
             <h2>Preview</h2>
-            <p>{{ $this->selectedQuestion?->text }}</p>
-            {{-- for some weird reason, nullsafe doesn't work here --}}
-            @if($this->selectedImage)
-                <img
-                    id="{{ $this->selectedImage->id }}"
-                    src="{{ route('media', $this->selectedImage->path) }}" 
-                    alt="{{ $this->selectedImage->title }}"
-                    style="max-height:200px;border:1px solid black"
-                >
-            @endif
-            @if($this->selectedOptions)
-                @foreach($this->selectedOptions as $selectedOption)
-                    {{ $selectedOption->label }}
-                @endforeach
-            @endif
+            <div class="flex flex-col items-center">
+                <p>{{ $this->selectedQuestion?->text }}</p>
+                {{-- for some weird reason, nullsafe doesn't work here --}}
+                @if($this->selectedImage)
+                    <img
+                        id="{{ $this->selectedImage->id }}"
+                        src="{{ route('media', $this->selectedImage->path) }}" 
+                        alt="{{ $this->selectedImage->title }}"
+                        style="max-height:200px;border:1px solid black"
+                    >
+                @endif
+                <div class="flex w-full">
+                    @if($this->selectedOptions)
+                        @foreach($this->selectedOptions as $selectedOption)
+                            <div class="p-2 border-2 border-black text-center">{{ $selectedOption->label }}</div>
+                        @endforeach
+                    @endif
+                </div>
+            </div>
         </div>
     </div>
 </div>
