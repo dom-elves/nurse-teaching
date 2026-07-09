@@ -22,6 +22,9 @@ new class extends Component
     public ?int $questionId = null;
     public ?Question $question = null;
 
+    public ?int  $imageId = null;
+    public ?Image $image = null;
+
     public function mount(): void
     {
         $this->questions = Question::all();
@@ -60,6 +63,11 @@ new class extends Component
     {
         $this->question = Question::find($value);
     }
+
+    public function updatedImageId($value)
+    {
+        $this->image = Image::find($value);
+    }
 };
 ?>
 {{--
@@ -95,7 +103,7 @@ new class extends Component
             </div>
             
             {{-- image selection, no free flux equivalent so had to make a basic one --}}
-            {{-- <div>
+            <div>
                 <h2>Image</h2>
                 <div class="flex flex-wrap gap-4" x-data="{ selected: null }">
                     @foreach ($this->images as $image)
@@ -106,7 +114,7 @@ new class extends Component
                                 alt="{{ $image->title }}"
                                 style="max-height:200px;border:1px solid black"
                                 :class="{ 'opacity-25': selected === {{ $image->id }} }"
-                                x-on:click="$wire.set('slide.image_id', {{ $image->id }}); selected = {{ $image->id }}"
+                                x-on:click="$wire.set('imageId', {{ $image->id }}); selected = {{ $image->id }}"
                             >
                             <p
                                 :class="{ 'visible': selected === {{ $image->id }} }" 
@@ -121,7 +129,7 @@ new class extends Component
                 @error('slide.image_id')
                     <p class="text-sm text-red-500">{{ $message }}</p>
                 @enderror
-            </div> --}}
+            </div>
 
             {{-- option selection, again flux multiselect isn't free so i made one --}}
             {{-- todo: move this into a parent div and let alpine do all the preview stuff --}}
@@ -176,9 +184,19 @@ new class extends Component
                 {{ __('Save') }}
             </flux:button>
         </form>
+        {{-- slide preview --}}
         <div>
             <h2>Preview</h2>
             <p>{{ $this->question?->text }}</p>
+            {{-- for some weird reason, nullsafe doesn't work here --}}
+            @if($this->image)
+                <img
+                    id="{{ $this->image->id }}"
+                    src="{{ route('media', $this->image->path) }}" 
+                    alt="{{ $this->image->title }}"
+                    style="max-height:200px;border:1px solid black"
+                >
+            @endif
             {{-- <p>{{ $this->slide['image_id'] }}</p>
             @foreach($this->slide['option_ids'] as $ids)
                 {{ $ids }}
