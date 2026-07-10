@@ -191,21 +191,27 @@ new class extends Component
             </flux:button>
         </form>
 
-        {{-- slide preview --}}
+        {{-- slide mobile preview --}}
         <div class="w-1/2">
             <h2>Preview</h2>
-            <div class="flex flex-col items-center">
-                <p>{{ $this->selectedQuestion?->text }}</p>
-                {{-- for some weird reason, nullsafe doesn't work here --}}
-                @if($this->selectedImage)
-                    <img
-                        id="{{ $this->selectedImage->id }}"
-                        src="{{ route('media', $this->selectedImage->path) }}" 
-                        alt="{{ $this->selectedImage->title }}"
-                        style="max-height:200px;border:1px solid black"
-                    >
-                @endif
-                <div class="flex w-full">
+            <div class="flex flex-col items-center relative" style="height:932px;width:432px;border:1px solid black">
+                {{-- question --}}
+                <div class="flex w-full justify-center items-center border-2 border-indigo-500" style="height:100px">
+                    <p>{{ $this->selectedQuestion?->text }}</p>
+                </div>
+                {{-- image --}}
+                <div class="w-full border-2 border-purple-500 h-[682px]">
+                    @if($this->selectedImage)
+                        <img
+                            id="{{ $this->selectedImage->id }}"
+                            src="{{ route('media', $this->selectedImage->path) }}" 
+                            alt="{{ $this->selectedImage->title }}"
+                            class="w-full h-full object-contain"
+                        >
+                    @endif
+                </div>
+                {{-- options --}}
+                <div class="flex w-full border-2 border-sky-500 absolute bottom-0 right-0 left-0" style="height:150px;">
                     @if($this->selectedOptions)
                         @foreach($this->selectedOptions as $selectedOption)
                             <div class="p-2 border-2 border-black text-center">{{ $selectedOption->label }}</div>
