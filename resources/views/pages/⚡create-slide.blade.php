@@ -9,27 +9,26 @@ use App\Models\Slide;
 
 new class extends Component
 {
+    // properties are arranged in such a way;
+    // - collection of all available slide properties
+    // - propertyId(s) for alpine to send to livewire to query
+    // - model/collection for entirely actively selected options
+
     public Collection $questions;
-    public Collection $images;
-    public Collection $options;
-
-    // public array $slide = [
-    //     'question_id' => null,
-    //     'image_id' => null,
-    //     'option_ids' => [],
-    // ];
-
     public ?int $questionId = null;
     public ?Question $selectedQuestion = null;
 
+    public Collection $images;
     public ?int  $imageId = null;
     public ?Image $selectedImage = null;
 
+    public Collection $options;
     public ?array $optionIds = [];
     public ?Collection $selectedOptions = null;
 
     public function mount(): void
     {
+        // todo: paginate, especially images
         $this->questions = Question::all();
         $this->images = Image::all();
         $this->options = Option::all();
@@ -57,22 +56,22 @@ new class extends Component
     {
         $this->validate(
             [
-                'slide.question_id' => 'required|exists:questions,id',
-                'slide.image_id' => 'required|exists:images,id',
+                'questionId' => 'required|exists:questions,id',
+                'imageId' => 'required|exists:images,id',
                 'optionIds' => 'required|array|min:2|max:4',
                 'optionIds.*' => 'exists:options,id',
             ],
             [
-                'slide.question_id.required' => 'Please select a question.',
-                'slide.question_id.exists' => 'The selected question is invalid.',
+                'questionId.required' => 'Please select a question.',
+                'questionId.exists' => 'The selected question is invalid.',
 
-                'slide.image_id.required' => 'Please select an image.',
-                'slide.image_id.exists' => 'The selected image is invalid.',
+                'imageId.required' => 'Please select an image.',
+                'imageId.exists' => 'The selected image is invalid.',
 
                 'optionIds.required' => 'Please select two to four options.',
                 'optionIds.min' => 'Please select at least two optionsm.',
                 'optionIds.max' => 'Please select no more than four options.',
-            ]
+            ],
         );
     }
 };
@@ -104,7 +103,7 @@ new class extends Component
                             </flux:select.option>
                         @endforeach
                 </flux:select>
-                @error('slide.question_id')
+                @error('questionId')
                     <p class="text-sm text-red-500">{{ $message }}</p>
                 @enderror
             </div>
@@ -133,7 +132,7 @@ new class extends Component
                         </div>
                     @endforeach
                 </div>
-                @error('slide.image_id')
+                @error('imageId')
                     <p class="text-sm text-red-500">{{ $message }}</p>
                 @enderror
             </div>
