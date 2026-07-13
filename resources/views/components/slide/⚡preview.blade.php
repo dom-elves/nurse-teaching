@@ -17,6 +17,9 @@ new class extends Component
 
     #[Reactive]
     public ?Collection $options = null;
+
+    public $activeOptionId = null;
+
 };
 ?>
 
@@ -30,21 +33,24 @@ new class extends Component
                 <p>{{ $this->question?->text }}</p>
             </div>
             {{-- image --}}
-            <div class="w-full border-2 border-purple-500 h-[682px]">
-                @if($this->image)
-                    <img
-                        id="{{ $this->image->id }}"
-                        src="{{ route('media', $this->image->path) }}" 
-                        alt="{{ $this->image->title }}"
-                        class="w-full h-full object-contain"
-                    >
-                @endif
-            </div>
+            <livewire:image-region-selector
+                :image="$this->image"
+                :active-option-id="$this->activeOptionId"
+            />
             {{-- options --}}
             <div class="flex w-full border-2 border-sky-500 absolute bottom-0 right-0 left-0" style="height:150px;">
-                @if($this->options)
-                    @foreach($this->options as $option)
-                        <div class="p-2 border-2 border-black text-center">{{ $option->label }}</div>
+                @if($options)
+                    @foreach($options as $option)
+                        <div
+                            wire:key="option-{{ $option->id }}"
+                            wire:click="$set('activeOptionId', {{ $option->id }});"
+                            @class([
+                                'p-2 text-center flex-1',
+                                'border-2 border-red-500 bg-red-50' => $activeOptionId == $option->id,
+                            ])
+                        >
+                            {{ $option->label }}
+                        </div>
                     @endforeach
                 @endif
             </div>
