@@ -20,6 +20,11 @@ new class extends Component
 
     public $activeOptionId = null;
 
+    public function updatedActiveOptionId($id)
+    {
+        dump($id);
+    }
+
 };
 ?>
 
@@ -38,16 +43,18 @@ new class extends Component
                 :active-option-id="$this->activeOptionId"
             />
             {{-- options --}}
-            <div class="flex w-full border-2 border-sky-500 absolute bottom-0 right-0 left-0" style="height:150px;">
+            <div 
+                x-data="{ selected: false }"
+                class="flex w-full border-2 border-sky-500 absolute bottom-0 right-0 left-0" 
+                style="height:150px;"
+            >
                 @if($options)
                     @foreach($options as $option)
                         <div
                             wire:key="option-{{ $option->id }}"
-                            wire:click="$set('activeOptionId', {{ $option->id }});"
-                            @class([
-                                'p-2 text-center flex-1',
-                                'border-2 border-red-500 bg-red-50' => $activeOptionId == $option->id,
-                            ])
+                            x-on:click="$wire.set('activeOptionId', {{ $option->id }});selected = {{ $option->id }}"
+                            class="p-2 text-center flex-1"
+                            :class="{'border-2 border-red-500 bg-red-50' : selected == {{ $option->id }} }"
                         >
                             {{ $option->label }}
                         </div>
