@@ -39,6 +39,10 @@ new class extends Component
                     alt="{{ $this->image->title }}"
                     class="max-h-[682px] w-auto object-contain"
                     style="touch-action: none;"
+                >
+                <canvas
+                    x-ref="canvas"
+                    class="absolute top-0 left-0 opacity-25 cursor-crosshair bg-red-100"
                     @load="sizeCanvas()"
                     @mousedown="start($event)"
                     @mousemove="move($event)"
@@ -47,10 +51,6 @@ new class extends Component
                     @touchstart="start($event)"
                     @touchmove="move($event)"
                     @touchend="end()"
-                >
-                <canvas
-                    x-ref="canvas"
-                    class="absolute top-0 left-0 opacity-25 cursor-crosshair bg-red-100"
                 ></canvas>
             </div>
         </div>
@@ -81,14 +81,6 @@ new class extends Component
             this.$refs.canvas.width = this.$refs.image.clientWidth;
             this.$refs.canvas.height = this.$refs.image.clientHeight;
             this.redraw();
-        },
-
-        redraw() {
-            const ctx = this.ctx;
-            const canvas = this.$refs.canvas;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // add stuff for existing points later
         },
 
         /* Mapping */
@@ -136,6 +128,14 @@ new class extends Component
             const simplifiedPixels = this.simplify(this.points, 2);
             const normalized = simplifiedPixels.map(p => this.toNormalized(p));
             this.$wire.savePolygon(normalized);
+        },
+
+        redraw() {
+            const ctx = this.ctx;
+            const canvas = this.$refs.canvas;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // add stuff for existing points later
         },
     }));
 </script>
