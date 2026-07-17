@@ -39,11 +39,11 @@ new class extends Component
                     alt="{{ $this->image->title }}"
                     class="max-h-[682px] w-auto object-contain"
                     style="touch-action: none;"
+                    @load="sizeCanvas()"
                 >
                 <canvas
                     x-ref="canvas"
                     class="absolute top-0 left-0 opacity-25 cursor-crosshair bg-red-100"
-                    @load="sizeCanvas()"
                     @mousedown="start($event)"
                     @mousemove="move($event)"
                     @mouseup="end()"
