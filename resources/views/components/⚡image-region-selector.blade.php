@@ -90,6 +90,53 @@ new class extends Component
 
             // add stuff for existing points later
         },
+
+        /* Mapping */
+        // takes canvas dimenions 'out' of viewport dimensions
+        // and gets pixel co-ords from that
+        getPixelPos(e) {
+            const rect = this.$refs.canvas.getBoundingClientRect();
+            const point = e.touches ? e.touches[0] : e;
+            return { x: point.clientX - rect.left, y: point.clientY - rect.top };
+        },
+
+        // converts pixel co-ords to decimal fraction, relative to canvas
+        // so 0.4 0.3 is 40% "up" and 30% "across"
+        toNormalized(pixelPt) {
+            const canvas = this.$refs.canvas;
+            return { x: pixelPt.x / canvas.width, y: pixelPt.y / canvas.height };
+        },
+
+        // inverse of the above
+        toPixels(normPt) {
+            const canvas = this.$refs.canvas;
+            return { x: normPt.x * canvas.width, y: normPt.y * canvas.height };
+        },
+
+        /* Drawing */
+        // add first point to this.points array
+        start(e) {
+            this.drawing = true;
+            this.points = [this.getPixelPos(e)];
+            e.preventDefault();
+        },
+
+        // every move adds points
+        move(e) {
+            if (!this.drawing) return;
+            this.points.push(this.getPixelPos(e));
+            this.redraw();
+            e.preventDefault();
+        },
+
+        // stop drawing
+        end() {
+            if (!this.drawing) return;
+            this.drawing = false;
+            const simplifiedPixels = this.simplify(this.points, 2);
+            const normalized = simplifiedPixels.map(p => this.toNormalized(p));
+            this.$wire.savePolygon(normalized);
+        },
     }));
 </script>
 @endscript
