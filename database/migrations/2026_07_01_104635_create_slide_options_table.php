@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('slide_id')->constrained();
             $table->foreignId('option_id')->constrained();
+            $table->json('zone')->nullable();
             $table->boolean('is_correct')->nullable();
             $table->timestamps();
         });

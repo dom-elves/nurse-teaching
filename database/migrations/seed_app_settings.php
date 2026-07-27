@@ -30,14 +30,34 @@ return new class extends Migration
             ],
         ]);
 
-        $image = Image::create([
+        $image1 = Image::create([
             'title' => 'Human Body',
             'path' => 'images/human-body.png',
         ]);
 
         $question = Question::create([
-            'image_id' => $image->id,
+            'image_id' => $image1->id,
             'text' => 'Click on the head.',
+        ]);
+        
+        $slide = Slide::create([
+            'image_id' => $image1->id,
+            'question_id' => $question->id,
+        ]);
+
+        $image2 = Image::create([
+            'title' => 'Chopr Logo',
+            'path' => 'images/chopr.png',
+        ]);
+
+        $question = Question::create([
+            'image_id' => $image2->id,
+            'text' => 'Click on the head.',
+        ]);
+        
+        $slide = Slide::create([
+            'image_id' => $image2->id,
+            'question_id' => $question->id,
         ]);
 
         $options = Option::factory()
@@ -48,19 +68,13 @@ return new class extends Migration
                 ['label' => 'wrong answer 2'],
                 ['label' => 'wrong answer 3'],
             )
-            ->create([
-                'zone' => null,
-            ]);
-        
-        $slide = Slide::create([
-            'image_id' => $image->id,
-            'question_id' => $question->id,
-        ]);
+            ->create();
 
         foreach ($options as $option) {
             SlideOption::create([
                 'slide_id' => $slide->id,
                 'option_id' => $option->id,
+                'zone' => null,
                 'is_correct' => $option->label === 'right answer',
             ]);
         }
