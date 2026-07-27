@@ -29,3 +29,7 @@ Accessible to teachers, properties for a slide can be uploaded, and fall under t
 
 ### Slide Creation
 Accessible to teachers, a `slide` can be created and consists of a question, image and up to four options. On creation the teacher will select a question from the dropdown, and four possible answers as options. They can then designate which one is correct, and draw a region on the image to have as the clickable area.
+
+_Currently having a bit of trouble with the region drawing for slide creation. It's proving complicated, so may first have a simplified version where the teachers upload a 'selected' image, e.g. anatomy with the liver highlighed, and the question ends up being a simple 'What is this?' This will enable me to crack on and develop things like highscores sooner, rather than getting stuck for ages behind a single piece of functionality._
+
+
