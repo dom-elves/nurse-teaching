@@ -18,12 +18,13 @@ new class extends Component
     #[Reactive]
     public ?Collection $options = null;
 
-    public $activeOptionId = null;
+    // // this currently does nothing, but leaving here as a reminder
+    // public $correctOptionId = null;
 
-    public function updatedActiveOptionId($id)
-    {
-        dump($id);
-    }
+    // public function updatedCorrectOptionId($id)
+    // {
+    //     $this->dispatch('correct-option-selected', id: $id);
+    // }
 
 };
 ?>
@@ -38,28 +39,38 @@ new class extends Component
                 <p>{{ $this->question?->text }}</p>
             </div>
             {{-- image --}}
-            <livewire:image-region-selector
-                :image="$this->image"
-                :active-option-id="$this->activeOptionId"
-            />
+            @if($image)
+                <div class="w-full h-[682px]">
+                    <div class="relative inline-block border-2 border-purple-500">
+                        <img
+                            id="{{ $this->image?->id }}"
+                            src="{{ route('media', $this->image?->path) }}"
+                            alt="{{ $this->image?->title }}"
+                            class="max-h-[682px] w-auto object-contain"
+                        >
+                    </div>
+                </div>
+            @endif
             {{-- options --}}
             <div 
                 x-data="{ selected: false }"
                 class="flex w-full border-2 border-sky-500 absolute bottom-0 right-0 left-0" 
                 style="height:150px;"
             >
-                @if($options)
+                
                     @foreach($options as $option)
                         <div
                             wire:key="option-{{ $option->id }}"
-                            x-on:click="$wire.set('activeOptionId', {{ $option->id }});selected = {{ $option->id }}"
+                            {{-- x-on:click="$wire.set('correctOptionId', {{ $option->id }});selected = {{ $option->id }}" --}}
+                            wire:click="$dispatch('correct-option-selected', { id: {{ $option->id }}})"
                             class="p-2 text-center flex-1"
                             :class="{'border-2 border-red-500 bg-red-50' : selected == {{ $option->id }} }"
                         >
                             {{ $option->label }}
                         </div>
                     @endforeach
-                @endif
+               
+            </div>
             </div>
         </div>
     </div>

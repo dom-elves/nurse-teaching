@@ -6,25 +6,15 @@ use App\Models\Image;
 use App\Models\Question;
 use App\Models\Option;
 use App\Models\Slide;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Computed;
 
 new class extends Component
 {
-    // properties are arranged in such a way;
-    // - collection of all available slide properties
-    // - propertyId(s) for alpine to send to livewire to query
-    // - model/collection for entirely actively selected options
-
+    // collections determined in mount method
     public Collection $questions;
-    public ?int $questionId = null;
-    public ?Question $selectedQuestion = null;
-
     public Collection $images;
-    public ?int  $imageId = null;
-    public ?Image $selectedImage = null;
-
     public Collection $options;
-    public ?array $optionIds = [];
-    public ?Collection $selectedOptions = null;
 
     public function mount(): void
     {
@@ -34,21 +24,36 @@ new class extends Component
         $this->options = Option::all();
     }
 
-    // Livewire magic methods, changing a prop allows these methods to exist
-    // already all wired up
-    public function updatedQuestionId($value)
+    // these are set by the user
+    public ?int $questionId = null;
+    public ?int $imageId = null;
+    public ?array $optionIds = [];
+
+    // computed properties for the above
+    // first two need to coalesce as null to prevent render error
+    #[Computed]
+    public function selectedQuestion(): Question|null
     {
-        $this->selectedQuestion = Question::find($value);
+        return Question::find($this->questionId) ?? null;
     }
 
-    public function updatedImageId($value)
+    #[Computed]
+    public function selectedImage(): Image|null
     {
-        $this->selectedImage = Image::find($value);
+        return Image::find($this->imageId) ?? null;
     }
 
-    public function updatedOptionIds($value)
+    #[Computed]
+    public function selectedOptions(): Collection
     {
-        $this->selectedOptions = Option::whereIn('id', $value)->get();
+        return Option::whereIn('id', $this->optionIds)->get();
+    }
+
+    // listener for child component selecting which option is classed as correct
+    #[On('correct-option-selected')]
+    public function setCorrectOption($id)
+    {
+        dump($this->selectedOptions);
     }
 
     // slide creation
@@ -69,10 +74,12 @@ new class extends Component
                 'imageId.exists' => 'The selected image is invalid.',
 
                 'optionIds.required' => 'Please select two to four options.',
-                'optionIds.min' => 'Please select at least two optionsm.',
+                'optionIds.min' => 'Please select at least two options.',
                 'optionIds.max' => 'Please select no more than four options.',
             ],
         );
+
+        dd('a2');
     }
 };
 ?>
