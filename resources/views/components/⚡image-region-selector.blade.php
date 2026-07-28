@@ -3,6 +3,7 @@
 use Livewire\Component;
 use Livewire\Attributes\Reactive;
 use App\Models\Image;
+use App\Models\SlideOption;
 
 new class extends Component
 {
@@ -20,6 +21,16 @@ new class extends Component
     public function updatedImage($value)
     {
         $this->polygon = [];
+    }
+
+    public function savePolygon(array $points)
+    {
+        $points = json_encode($points);
+        $this->polygon = $points;
+
+        SlideOption::create(['image_id' => $this->image->id, 'zone' => $points]);
+
+        $this->dispatch('region-saved', points: $points);
     }
 };
 ?>
@@ -105,6 +116,18 @@ new class extends Component
             return { x: normPt.x * canvas.width, y: normPt.y * canvas.height };
         },
 
+        // simplifies the array of pixel points that are recorded with every mouse move
+        simplify(pixelPts, minDist) {
+            const out = [pixelPts[0]];
+            for (let i = 1; i < pixelPts.length; i++) {
+                const last = out[out.length - 1];
+                const dx = pixelPts[i].x - last.x;
+                const dy = pixelPts[i].y - last.y;
+                if (Math.sqrt(dx * dx + dy * dy) >= minDist) out.push(pixelPts[i]);
+            }
+            return out;
+        },
+
         /* Drawing */
         // add first point to this.points array
         start(e) {
@@ -127,8 +150,12 @@ new class extends Component
             this.drawing = false;
             const simplifiedPixels = this.simplify(this.points, 2);
             const normalized = simplifiedPixels.map(p => this.toNormalized(p));
-            this.$wire.savePolygon(normalized);
+            // don't need to do this yet
+            // this.$wire.savePolygon(normalized);
         },
+
+
+        
 
         redraw() {
             const ctx = this.ctx;
@@ -137,6 +164,8 @@ new class extends Component
 
             // add stuff for existing points later
         },
+
+
     }));
 </script>
 @endscript
