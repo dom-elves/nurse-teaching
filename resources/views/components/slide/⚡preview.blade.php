@@ -18,13 +18,13 @@ new class extends Component
     #[Reactive]
     public ?Collection $options = null;
 
-    // // this currently does nothing, but leaving here as a reminder
-    // public $correctOptionId = null;
-
-    // public function updatedCorrectOptionId($id)
-    // {
-    //     $this->dispatch('correct-option-selected', id: $id);
-    // }
+    // this can be done inline with:
+    // wire:click="$dispatch('correct-option-selected', { id: {{ $option->id }}})"
+    // but having it like this makes it testable
+    public function selectCorrectOption(int $id): void
+    {
+        $this->dispatch('correct-option-selected', id: $id);
+    }
 
 };
 ?>
@@ -39,38 +39,39 @@ new class extends Component
                 <p>{{ $this->question?->text }}</p>
             </div>
             {{-- image --}}
-            @if($image)
-                <div class="w-full h-[682px]">
-                    <div class="relative inline-block border-2 border-purple-500">
+            <div class="w-full h-[682px]">
+                <div class="relative inline-block border-2 border-purple-500">
+                    @if ($image)
                         <img
-                            id="{{ $this->image?->id }}"
-                            src="{{ route('media', $this->image?->path) }}"
-                            alt="{{ $this->image?->title }}"
+                            id="{{ $image->id }}"
+                            src="{{ route('media', $image?->path) }}"
+                            alt="{{ $image->title }}"
                             class="max-h-[682px] w-auto object-contain"
                         >
-                    </div>
+                    @else
+                        <div>
+                            nothing to see here
+                        </div>
+                    @endif
                 </div>
-            @endif
+            </div>
             {{-- options --}}
             <div 
                 x-data="{ selected: false }"
                 class="flex w-full border-2 border-sky-500 absolute bottom-0 right-0 left-0" 
                 style="height:150px;"
             >
-                
-                    @foreach($options as $option)
-                        <div
-                            wire:key="option-{{ $option->id }}"
-                            x-on:click="selected = {{ $option->id }}"
-                            wire:click="$dispatch('correct-option-selected', { id: {{ $option->id }}})"
-                            class="p-2 text-center flex-1"
-                            :class="{'border-2 border-red-500 bg-red-50' : selected == {{ $option->id }} }"
-                        >
-                            {{ $option->label }}
-                        </div>
-                    @endforeach
-               
-            </div>
+                @foreach($options ?? [] as $option)
+                    <div
+                        wire:key="option-{{ $option->id }}"
+                        x-on:click="selected = {{ $option->id }}"
+                        wire:click="selectCorrectOption({{ $option->id }})"
+                        class="p-2 text-center flex-1"
+                        :class="{'border-2 border-red-500 bg-red-50' : selected == {{ $option->id }} }"
+                    >
+                        {{ $option->label }}
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>
