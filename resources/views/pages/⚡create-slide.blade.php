@@ -6,6 +6,7 @@ use App\Models\Image;
 use App\Models\Question;
 use App\Models\Option;
 use App\Models\Slide;
+use App\Models\SlideOption;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Computed;
 
@@ -28,6 +29,7 @@ new class extends Component
     public ?int $questionId = null;
     public ?int $imageId = null;
     public ?array $optionIds = [];
+    public ?int $correctOptionId = null;
 
     // computed properties for the above
     // first two need to coalesce as null to prevent render error
@@ -53,7 +55,7 @@ new class extends Component
     #[On('correct-option-selected')]
     public function setCorrectOption($id)
     {
-        dump($this->selectedOptions);
+        $this->correctOptionId = $this->selectedOptions->find($id)->id;
     }
 
     // slide creation
@@ -79,7 +81,20 @@ new class extends Component
             ],
         );
 
-        dd('a2');
+        $slide = Slide::create([
+            'question_id' => $this->questionId,
+            'image_id' => $this->imageId,
+        ]);
+
+        foreach ($this->optionIds as $optionId) {
+            SlideOption::create([
+                'slide_id' => $slide->id,
+                'option_id' => $optionId,
+                'is_correct' => $optionId == $this->correctOptionId ? true : false,
+            ]);
+        };
+
+        Flux::toast(variant: 'success', text: __('Slide Created.'));
     }
 };
 ?>
@@ -92,7 +107,7 @@ new class extends Component
     <h1 class="font-medium">Create a slide</h1>
     <div class="flex flex-row">
         <form method="POST" wire:submit="create" class="flex flex-col space-y-6 my-12 w-1/2">
-            
+
             {{-- question selection --}}
             <div>
                 <h2>Question</h2>

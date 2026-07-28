@@ -61,7 +61,7 @@ new class extends Component
                     @foreach($options as $option)
                         <div
                             wire:key="option-{{ $option->id }}"
-                            {{-- x-on:click="$wire.set('correctOptionId', {{ $option->id }});selected = {{ $option->id }}" --}}
+                            x-on:click="selected = {{ $option->id }}"
                             wire:click="$dispatch('correct-option-selected', { id: {{ $option->id }}})"
                             class="p-2 text-center flex-1"
                             :class="{'border-2 border-red-500 bg-red-50' : selected == {{ $option->id }} }"
