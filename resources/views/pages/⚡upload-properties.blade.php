@@ -18,15 +18,9 @@ new class extends Component
     <div class="flex flex-col gap-6">
         <livewire:question.create />
 
-        {{-- <flux:button variant="primary" wire:click="createImage" class="mb-12">
-            {{ __('Choose Images') }}
-        </flux:button> --}}
-
         <livewire:image.create />
 
         <livewire:option.create />
     </div>
-    {{-- @foreach ($this->options as $option)
-    {{ $option->label }}
-    @endforeach --}}
+
 </div>

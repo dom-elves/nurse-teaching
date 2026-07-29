@@ -9,10 +9,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
 });
 
-// Route::middleware(['auth', 'verified'])->group(function () {
-//     Route::view('game', 'game')->name('game');
-// });
-
 Route::get('/media/{path}', function (string $path) {
     abort_unless(Storage::disk('public')->exists($path), 404);
     return Storage::disk('public')->response($path);

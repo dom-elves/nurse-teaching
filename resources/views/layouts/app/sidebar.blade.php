@@ -24,7 +24,7 @@
                     <flux:sidebar.item icon="home" :href="route('slide.create')" :current="request()->routeIs('slide')" wire:navigate>
                         {{ __('Create Slide') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="home" :href="route('upload-properties')" :current="request()->routeIs('upload-properties')" wire:navigate>
+                    <flux:sidebar.item icon="home" :href="route('upload.properties')" :current="request()->routeIs('upload-properties')" wire:navigate>
                         {{ __('Upload Properties') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
